@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\work\toy_render\log_debug;D:\work\toy_render\math_tools;D:\work\toy_render\model_loader;D:\work\toy_render\render;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\log_debug;..\..\math_tools;..\..\model_loader;..\..\render;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

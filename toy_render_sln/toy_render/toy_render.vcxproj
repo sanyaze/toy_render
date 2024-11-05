@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\..\log_debug;..\..\math_tools;..\..\model_loader;..\..\render;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\log_debug;..\..\math_tools;..\..\model_loader;..\..\render;..\..\bmp_creater;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\bmp_creater\bmp_creater.h" />
     <ClInclude Include="..\..\log_debug\log_debug.h" />
     <ClInclude Include="..\..\math_tools\math_tools.h" />
   </ItemGroup>

@@ -17,6 +17,9 @@
     <ClInclude Include="..\..\log_debug\log_debug.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\bmp_creater\bmp_creater.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\main\main.cpp">

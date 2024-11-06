@@ -1,9 +1,9 @@
 #pragma once
+#include "log_debug.h"
 #include <cstdint>
 #include <vector>
 #include <fstream>
 #include <string>
-#include <iostream>
 
 #pragma pack(push, 1)
 struct BmpFileHeader
@@ -46,7 +46,7 @@ public:
         fileHeader.bfSize = sizeof(BmpFileHeader) + sizeof(BmpInfoHeader) + data.size() * sizeof(uint32_t);
     }
 
-    void setPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0)
+    void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0)
     {
         if (x < 0 || x >= infoHeader.biWidth || y < 0 || y >= infoHeader.biHeight) {
             return;
@@ -57,7 +57,7 @@ public:
         data[index] = rgba;
     }
 
-    void save(const std::string path)
+    void Save(const std::string path)
     {
         std::ofstream out(path.c_str(), std::ios_base::binary);
         out.write((char*)&fileHeader, sizeof(fileHeader));

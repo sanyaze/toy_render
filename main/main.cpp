@@ -11,12 +11,12 @@ int main()
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if (i*i + j*j <= 90000) {
-                bmp.setPixel(i, j, 255, 0, 0);
+            if (i*i + j*j <= 500*500) {
+                bmp.SetPixel(i, j, 255, 0, 0);
             }
         }
     }
     
-    bmp.save("test.bmp");
+    bmp.Save("test.bmp");
     return 0;
 }

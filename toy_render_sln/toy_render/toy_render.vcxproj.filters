@@ -20,6 +20,9 @@
     <ClInclude Include="..\..\bmp_creater\bmp_creater.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\render\render.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\main\main.cpp">

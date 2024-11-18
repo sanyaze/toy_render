@@ -152,7 +152,7 @@ public:
     Vector3f(float x, float y, float z) : data{ x, y, z } {}
 
     // 向量外积，只在三维成立
-    Vector3f Cross(const Vector3f v1, const Vector3f v2) {
+    static Vector3f Cross(const Vector3f v1, const Vector3f v2) {
         Vector3f r = Vector3f(v1.data[1][0] * v2.data[2][0] - v1.data[2][0] * v2.data[1][0],
                               v1.data[2][0] * v2.data[0][0] - v1.data[0][0] * v2.data[2][0],
                               v1.data[0][0] * v2.data[1][0] - v1.data[1][0] * v2.data[0][0] );
@@ -340,14 +340,12 @@ T operator*(const float k, const T t)
     return r;
 }
 
-template <typename MAT>
-float Dot(const MAT m1, const MAT m2)
+template <typename VEC>
+float Dot(const VEC m1, const VEC m2)
 {
     float r = 0;
     for (unsigned int i = 0; i < m1.row; i++) {
-        for (unsigned int j = 0; j < m1.col; j++) {
-            r += m1.data[i][j] * m2.data[i][j];
-        }
+        r += m1.data[i][0] * m2.data[i][0];
     }
     return r;
 }

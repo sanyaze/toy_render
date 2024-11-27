@@ -3,38 +3,38 @@
 #include "log_debug.h"
 
 // 矩阵按照2，3，4三个维度创建类型
-class Matrix2f
+class Matrix2d
 {
 public:
-    float data[2][2];
+    double data[2][2];
     unsigned int row = 2;
     unsigned int col = 2;
-    Matrix2f() : data{ {  0.0f, 0.0f },
+    Matrix2d() : data{ {  0.0f, 0.0f },
                        {  0.0f, 0.0f } } {}
-    Matrix2f(float a[2][2]) : data{ { a[0][0], a[0][1] },
+    Matrix2d(double a[2][2]) : data{ { a[0][0], a[0][1] },
                                     { a[1][0], a[1][1] } } {}
     
-    float Det()
+    double Det()
     {
         return data[0][0] * data[1][1] - data[0][1] * data[1][0];
     }
 };
 
-class Matrix3f
+class Matrix3d
 {
 public:
-    float data[3][3];
+    double data[3][3];
     unsigned int row = 3;
     unsigned int col = 3;
-    Matrix3f() : data{ {  0.0f, 0.0f, 0.0f },
+    Matrix3d() : data{ {  0.0f, 0.0f, 0.0f },
                        {  0.0f, 0.0f, 0.0f },
                        {  0.0f, 0.0f, 0.0f } } {}
-    Matrix3f(float a[3][3]) : data{ { a[0][0], a[0][1], a[0][2] },
+    Matrix3d(double a[3][3]) : data{ { a[0][0], a[0][1], a[0][2] },
                                     { a[1][0], a[1][1], a[1][2] },
                                     { a[2][0], a[2][1], a[2][2] } } {}
     
-    Matrix2f SubMat(int r, int c) {
-        Matrix2f subMat;
+    Matrix2d SubMat(int r, int c) {
+        Matrix2d subMat;
 
         int rCnt = 0;
         int cCnt = 0;
@@ -55,35 +55,35 @@ public:
         return subMat;
     }
 
-    float Det()
+    double Det()
     {
-        float r = 0;
+        double r = 0;
         for (unsigned int i = 0; i < row; i++) {
-            Matrix2f subMat = SubMat(i, 0);
+            Matrix2d subMat = SubMat(i, 0);
             r += data[i][0] * subMat.Det() * (i % 2 == 0 ? 1 : -1);
         }
         return r;
     }
 };
 
-class Matrix4f
+class Matrix4d
 {
 public:
-    float data[4][4];
+    double data[4][4];
     unsigned int row = 4;
     unsigned int col = 4;
-    Matrix4f() : data{ {  0.0f, 0.0f, 0.0f, 0.0f },
+    Matrix4d() : data{ {  0.0f, 0.0f, 0.0f, 0.0f },
                        {  0.0f, 0.0f, 0.0f, 0.0f },
                        {  0.0f, 0.0f, 0.0f, 0.0f },
                        {  0.0f, 0.0f, 0.0f, 0.0f } } {}
-    Matrix4f(float a[4][4]) : data{ { a[0][0], a[0][1], a[0][2], a[0][3] },
+    Matrix4d(double a[4][4]) : data{ { a[0][0], a[0][1], a[0][2], a[0][3] },
                                     { a[1][0], a[1][1], a[1][2], a[1][3] },
                                     { a[2][0], a[2][1], a[2][2], a[2][3] },
                                     { a[3][0], a[3][1], a[3][2], a[3][3] } } {}
     
-    Matrix3f SubMat(int r, int c)
+    Matrix3d SubMat(int r, int c)
     {
-        Matrix3f subMat;
+        Matrix3d subMat;
 
         int rCnt = 0;
         int cCnt = 0;
@@ -104,11 +104,11 @@ public:
         return subMat;
     }
 
-    float Det()
+    double Det()
     {
-        float r = 0;
+        double r = 0;
         for (unsigned int i = 0; i < row; i++) {
-            Matrix3f subMat = SubMat(i, 0);
+            Matrix3d subMat = SubMat(i, 0);
             r += data[i][0] * subMat.Det() * (i % 2 == 0 ? 1 : -1);
         }
         return r;
@@ -116,94 +116,94 @@ public:
 };
 
 // 向量也按照2，3，4三个维度创建类型
-class Vector2f
+class Vector2d
 {
 public:
-    float data[2][1];
+    double data[2][1];
     unsigned int row = 2;
     unsigned int col = 1;
-    Vector2f() : data{ 0.0f, 0.0f } {}
-    Vector2f(float a[2]) : data{ a[0], a[1] } {}
-    Vector2f(float x, float y) : data{ x, y } {}
+    Vector2d() : data{ 0.0f, 0.0f } {}
+    Vector2d(double a[2]) : data{ a[0], a[1] } {}
+    Vector2d(double x, double y) : data{ x, y } {}
 
-    float Mod()
+    double Mod()
     {
         return sqrt(data[0][0] * data[0][0] + data[1][0] * data[1][0]);
     }
 
-    Vector2f Normal()
+    Vector2d Normal()
     {
         if (Mod() == 0.0f) {
-            return Vector2f(0.0f, 0.0f);
+            return Vector2d(0.0f, 0.0f);
         } else {
-            return Vector2f(data[0][0] / Mod(), data[1][0] / Mod());
+            return Vector2d(data[0][0] / Mod(), data[1][0] / Mod());
         }
     }
 };
 
-class Vector3f
+class Vector3d
 {
 public:
-    float data[3][1];
+    double data[3][1];
     unsigned int row = 3;
     unsigned int col = 1;
-    Vector3f() : data{ 0.0f, 0.0f, 0.0f } {}
-    Vector3f(float a[3]) : data{ a[0], a[1], a[2] } {}
-    Vector3f(float x, float y, float z) : data{ x, y, z } {}
+    Vector3d() : data{ 0.0f, 0.0f, 0.0f } {}
+    Vector3d(double a[3]) : data{ a[0], a[1], a[2] } {}
+    Vector3d(double x, double y, double z) : data{ x, y, z } {}
 
     // 向量外积，只在三维成立
-    static Vector3f Cross(const Vector3f v1, const Vector3f v2) {
-        Vector3f r = Vector3f(v1.data[1][0] * v2.data[2][0] - v1.data[2][0] * v2.data[1][0],
+    static Vector3d Cross(const Vector3d v1, const Vector3d v2) {
+        Vector3d r = Vector3d(v1.data[1][0] * v2.data[2][0] - v1.data[2][0] * v2.data[1][0],
                               v1.data[2][0] * v2.data[0][0] - v1.data[0][0] * v2.data[2][0],
                               v1.data[0][0] * v2.data[1][0] - v1.data[1][0] * v2.data[0][0] );
         return r;
     }
 
-    float Mod()
+    double Mod()
     {
         return sqrt(data[0][0] * data[0][0] + data[1][0] * data[1][0] + data[2][0] * data[2][0]);
     }
 
-    Vector3f Normal()
+    Vector3d Normal()
     {
         if (Mod() == 0.0f) {
-            return Vector3f(0.0f, 0.0f, 0.0f);
+            return Vector3d(0.0f, 0.0f, 0.0f);
         } else {
-            return Vector3f(data[0][0] / Mod(), data[1][0] / Mod(), data[2][0] / Mod());
+            return Vector3d(data[0][0] / Mod(), data[1][0] / Mod(), data[2][0] / Mod());
         }
     }
 };
 
-class Vector4f
+class Vector4d
 {
 public:
-    float data[4][1];
+    double data[4][1];
     unsigned int row = 4;
     unsigned int col = 1;
-    Vector4f() : data{ 0.0f, 0.0f, 0.0f, 0.0f } {}
-    Vector4f(float a[4]) : data{ a[0], a[1], a[2], a[3] } {}
-    Vector4f(float x, float y, float z, float w) : data{ x, y, z, w } {}
+    Vector4d() : data{ 0.0f, 0.0f, 0.0f, 0.0f } {}
+    Vector4d(double a[4]) : data{ a[0], a[1], a[2], a[3] } {}
+    Vector4d(double x, double y, double z, double w) : data{ x, y, z, w } {}
 
-    float Mod()
+    double Mod()
     {
         return sqrt(data[0][0] * data[0][0] + data[1][0] * data[1][0] + data[2][0] * data[2][0] + data[3][0] * data[3][0]);
     }
 
-    Vector4f Normal()
+    Vector4d Normal()
     {
         if (Mod() == 0.0f) {
-            return Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
+            return Vector4d(0.0f, 0.0f, 0.0f, 0.0f);
         } else {
-            return Vector4f(data[0][0] / Mod(), data[1][0] / Mod(), data[2][0] / Mod(), data[3][0] / Mod());
+            return Vector4d(data[0][0] / Mod(), data[1][0] / Mod(), data[2][0] / Mod(), data[3][0] / Mod());
         }
     }
 };
 
 // 特殊矩阵生成
 // 单位矩阵
-Matrix2f Eye2()
+Matrix2d Eye2()
 {
-    Matrix2f r;
+    Matrix2d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = (i == j) ? 1.0 : 0.0;
@@ -212,9 +212,9 @@ Matrix2f Eye2()
     return r;
 }
 
-Matrix3f Eye3()
+Matrix3d Eye3()
 {
-    Matrix3f r;
+    Matrix3d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = (i == j) ? 1.0 : 0.0;
@@ -223,9 +223,9 @@ Matrix3f Eye3()
     return r;
 }
 
-Matrix4f Eye4()
+Matrix4d Eye4()
 {
-    Matrix4f r;
+    Matrix4d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = (i == j) ? 1.0 : 0.0;
@@ -235,9 +235,9 @@ Matrix4f Eye4()
 }
 
 // 全1矩阵
-Matrix2f Ones2()
+Matrix2d Ones2()
 {
-    Matrix2f r;
+    Matrix2d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = 1.0;
@@ -246,9 +246,9 @@ Matrix2f Ones2()
     return r;
 }
 
-Matrix3f Ones3()
+Matrix3d Ones3()
 {
-    Matrix3f r;
+    Matrix3d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = 1.0;
@@ -257,9 +257,9 @@ Matrix3f Ones3()
     return r;
 }
 
-Matrix4f Ones4()
+Matrix4d Ones4()
 {
-    Matrix4f r;
+    Matrix4d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = 1.0;
@@ -317,7 +317,7 @@ T operator*(const T t1, const T t2)
 }
 
 template <typename T>
-T operator*(const T t, const float k)
+T operator*(const T t, const double k)
 {
     T r;
     for (unsigned int i = 0; i < t.row; i++) {
@@ -329,7 +329,7 @@ T operator*(const T t, const float k)
 }
 
 template <typename T>
-T operator*(const float k, const T t)
+T operator*(const double k, const T t)
 {
     T r;
     for (unsigned int i = 0; i < t.row; i++) {
@@ -341,9 +341,9 @@ T operator*(const float k, const T t)
 }
 
 template <typename VEC>
-float Dot(const VEC m1, const VEC m2)
+double Dot(const VEC m1, const VEC m2)
 {
-    float r = 0;
+    double r = 0;
     for (unsigned int i = 0; i < m1.row; i++) {
         r += m1.data[i][0] * m2.data[i][0];
     }
@@ -351,9 +351,9 @@ float Dot(const VEC m1, const VEC m2)
 }
 
 // 向量转置相乘，得到同维度的矩阵
-Matrix2f TransMultiply(const Vector2f v1, const Vector2f v2)
+Matrix2d TransMultiply(const Vector2d v1, const Vector2d v2)
 {
-    Matrix2f r;
+    Matrix2d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = v1.data[i][0] * v2.data[j][0];
@@ -362,9 +362,9 @@ Matrix2f TransMultiply(const Vector2f v1, const Vector2f v2)
    return r;
 }
 
-Matrix3f TransMultiply(const Vector3f v1, const Vector3f v2)
+Matrix3d TransMultiply(const Vector3d v1, const Vector3d v2)
 {
-    Matrix3f r;
+    Matrix3d r;
     for (unsigned int i = 0; i < r.row; i++) {
         for (unsigned int j = 0; j < r.col; j++) {
             r.data[i][j] = v1.data[i][0] * v2.data[j][0];
@@ -373,9 +373,9 @@ Matrix3f TransMultiply(const Vector3f v1, const Vector3f v2)
    return r;
 }
 
- Matrix4f TransMultiply(const Vector4f v1, const Vector4f v2)
+ Matrix4d TransMultiply(const Vector4d v1, const Vector4d v2)
  {
-     Matrix4f r;
+     Matrix4d r;
      for (unsigned int i = 0; i < r.row; i++) {
          for (unsigned int j = 0; j < r.col; j++) {
              r.data[i][j] = v1.data[i][0] * v2.data[j][0];
@@ -385,9 +385,9 @@ Matrix3f TransMultiply(const Vector3f v1, const Vector3f v2)
  }
 
 // 矩阵向量相乘
-Vector2f operator*(const Matrix2f m, const Vector2f v)
+Vector2d operator*(const Matrix2d m, const Vector2d v)
 {
-    Vector2f r;
+    Vector2d r;
     for (unsigned int i = 0; i < m.row; i++) {
         for (unsigned int j = 0; j < m.col; j++) {
             r.data[i][0] += m.data[i][j] * v.data[j][0];
@@ -396,9 +396,9 @@ Vector2f operator*(const Matrix2f m, const Vector2f v)
    return r;
 }
 
-Vector3f operator*(const Matrix3f m, const Vector3f v)
+Vector3d operator*(const Matrix3d m, const Vector3d v)
 {
-    Vector3f r;
+    Vector3d r;
     for (unsigned int i = 0; i < m.row; i++) {
         for (unsigned int j = 0; j < m.col; j++) {
             r.data[i][0] += m.data[i][j] * v.data[j][0];
@@ -407,9 +407,9 @@ Vector3f operator*(const Matrix3f m, const Vector3f v)
    return r;
 }
 
- Vector4f operator*(const Matrix4f m, const Vector4f v)
+ Vector4d operator*(const Matrix4d m, const Vector4d v)
  {
-     Vector4f r;
+     Vector4d r;
      for (unsigned int i = 0; i < m.row; i++) {
          for (unsigned int j = 0; j < m.col; j++) {
              r.data[i][0] += m.data[i][j] * v.data[j][0];

@@ -67,7 +67,7 @@ bool IsPointInPlane(Vector2d v, Vector3d t[3]) // v为点，t为三角形的顶�
     double detCa = ca.Det();
 
     // 判断三个叉积是否同向，即z轴分量是否同号
-    if ((detAb * detBc) > 0 && (detBc * detCa) > 0) {
+    if ((detAb * detBc) >= 0 && (detBc * detCa) >= 0) {
         return true; // 同向说明点在三角形内
     } else {
         return false;// 不同向说明点在三角形外
@@ -93,36 +93,44 @@ std::vector<Vector3d> VertexProj(std::vector<Vector4d> v, Matrix4d& proj, int wi
 }
 
 // 平移变换
-void ShiftbyDir(Vector4d &v, Vector3d dir)
+std::vector<Vector4d> ShiftbyDir(std::vector<Vector4d> v, Vector3d dir, double distance)
 {
-    v = v + Vector4d(dir.data[0][0], dir.data[1][0], dir.data[2][0], 0);
+    Matrix4d shift = Eye4();
+    Vector3d dist = dir.Normal() * distance;
+    shift.data[0][3] = dist.data[0][0];
+    shift.data[1][3] = dist.data[1][0];
+    shift.data[2][3] = dist.data[2][0];
+
+    std::vector<Vector4d> vShift(v.size(), Vector4d());
+    for (int i = 0; i < v.size(); i++) {
+        vShift[i] = shift * v[i];
+    }
+    return vShift;
 }
 
 // 旋转变换
 std::vector<Vector4d> RotatebyAxis(std::vector<Vector4d> v, Vector3d axis, double angle) // angle为角度值，axis为通过原点的直线的方向向量
 {
-    double radAngle = angle * PI / 180;
-    double cosa = cos(angle);
-    double sina = sin(angle);
+    double radAngle = fmod(angle, 360.) * PI / 180;
+    double cosa = cos(radAngle);
+    double sina = sin(radAngle);
     double k = 1 - cosa;
 
     Vector3d vAxis = axis.Normal();
     double ax = vAxis.data[0][0];
     double ay = vAxis.data[1][0];
     double az = vAxis.data[2][0];
-    Matrix4d rot = Eye4();
-    rot.data[0][0] = ax*ax*k + cosa;
-    rot.data[0][1] = ax*ay*k - az * sina;
-    rot.data[0][2] = ax*az*k + ay * sina;
-    rot.data[0][3] = 0;
-    rot.data[1][0] = ax*ay*k + az * sina;
-    rot.data[1][1] = ay*ay*k + cosa;
-    rot.data[1][2] = ay*az*k - ax * sina;
-    rot.data[1][3] = 0;
-    rot.data[2][0] = ax*az*k - ay * sina;
-    rot.data[2][1] = ay*az*k + ax * sina;
-    rot.data[2][2] = az*az*k + cosa;
-    rot.data[2][3] = 0;
+    
+    Matrix4d skew = Matrix4d();
+    skew.data[0][1] = -az;
+    skew.data[0][2] = ay;
+    skew.data[1][0] = az;
+    skew.data[1][2] = -ax;
+    skew.data[2][0] = -ay;
+    skew.data[2][1] = ax;
+    skew.data[3][3] = 1;
+
+    Matrix4d rot = Eye4() + sina * skew + k * (skew * skew);
 
     std::vector<Vector4d> vRot(v.size(), Vector4d());
     for (int i = 0; i < v.size(); i++) {

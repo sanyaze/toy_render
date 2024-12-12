@@ -5,17 +5,34 @@
 #include <fstream>
 #include <iostream>
 
-int main()
+int main(int argc, char* argv)
 {
-    int width = 1000;
-    int height = 1000;
-    BmpCreater bmp(width, height);
-
-    // 定义视锥体
-    double fov = 110.0f;
-    double aspect = double(width) / double(height);
+    // 定义渲染平面大小
+    int width = 600;
+    int height = 600;
+    // 定义视锥体参数
+    double fov = 90.0f;
     double near = -1.0f;
     double far = -1000.0f;
+    
+    // 读取配置参数
+    if (argc > 1) {
+        width = atoi(&argv[1]);
+    }
+    if (argc > 2) {
+        height = atoi(&argv[2]);
+    }
+    if (argc > 3) {
+        fov = atof(&argv[3]);
+    }
+    if (argc > 4) {
+        near = atof(&argv[4]);
+    }
+    if (argc > 5) {
+        far = atof(&argv[5]);
+    }
+
+    double aspect = double(width) / double(height);
     Matrix4d proj = Projection(fov, aspect, near, far);
 
     // 定义一个简单的立方体，中心坐标为(0,0,-50), 边长为30
@@ -53,9 +70,9 @@ int main()
     // 变换
     std::vector<Vector4d> vecCube = std::vector<Vector4d>(std::begin(cube), std::end(cube));
     vecCube = ShiftbyDir(vecCube, Vector3d(0., 0., 1.), 50);
-    vecCube = RotatebyAxis(vecCube, Vector3d(0., 0., 1.), 45.);
-    vecCube = RotatebyAxis(vecCube, Vector3d(0., 1., 0.), -45.);
-    vecCube = ShiftbyDir(vecCube, Vector3d(0., 0., 1.), -50);
+    vecCube = RotatebyAxis(vecCube, Vector3d(0., 0., 1.), 30.);
+    //vecCube = RotatebyAxis(vecCube, Vector3d(0., 1., 0.), -30.);
+    vecCube = ShiftbyDir(vecCube, Vector3d(0., 0., 1.), -100);
 
     // 绘制立方体
     std::vector<std::vector<int>> vecFace;
@@ -66,9 +83,11 @@ int main()
         vecFace.push_back(faceTmp);
         vecTexture.push_back(colorTmp);
     }
-    Render(vecCube, vecFace, vecTexture, proj, width, height, bmp);
 
+    BmpCreater bmp(width, height);
+    Render(vecCube, vecFace, vecTexture, proj, width, height, bmp);
     bmp.Save("test.bmp");
     printf("success!\n");
+
     return 0;
 }

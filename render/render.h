@@ -130,7 +130,7 @@ std::vector<Vector4d> RotatebyAxis(std::vector<Vector4d> v, Vector3d axis, doubl
     rot.data[0][2] = ax * az * k + ay * sina;
     rot.data[1][0] = ax * ay * k + az * sina;
     rot.data[1][1] = cosa + ay * ay * k;
-    rot.data[1][2] = ay * az * k - ax;
+    rot.data[1][2] = ay * az * k - ax * sina;
     rot.data[2][0] = ax * az * k - ay * sina;
     rot.data[2][1] = ay * az * k + ax * sina;
     rot.data[2][2] = cosa + az * az * k;
@@ -153,9 +153,9 @@ void Render(std::vector<Vector4d> vecCube, std::vector<std::vector<int>> face, s
     // 面元着色
     std::vector<std::vector<double>> zBuffer(width, std::vector<double>(height, -INFINITY));
     // 像素矩阵每行每列多两个点，方便后处理流程对边界的处理
-    std::vector<std::vector<double>> pixel_r(width + 2, std::vector<double>(height + 2, 0));
-    std::vector<std::vector<double>> pixel_g(width + 2, std::vector<double>(height + 2, 0));
-    std::vector<std::vector<double>> pixel_b(width + 2, std::vector<double>(height + 2, 0));
+    std::vector<std::vector<int>> pixel_r(width + 2, std::vector<int>(height + 2, 0));
+    std::vector<std::vector<int>> pixel_g(width + 2, std::vector<int>(height + 2, 0));
+    std::vector<std::vector<int>> pixel_b(width + 2, std::vector<int>(height + 2, 0));
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             Vector2d v = Vector2d(double(j), double(i));

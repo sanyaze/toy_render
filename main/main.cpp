@@ -5,31 +5,29 @@
 #include <fstream>
 #include <iostream>
 
-int main(int argc, char* argv)
+int main(int argc, char** argv)
 {
     // 定义渲染平面大小
-    int width = 600;
-    int height = 600;
+    int width = 2560;
+    int height = 1440;
     // 定义视锥体参数
     double fov = 90.0f;
     double near = -1.0f;
     double far = -1000.0f;
+    double rotAngle = 50.0;
     
     // 读取配置参数
     if (argc > 1) {
-        width = atoi(&argv[1]);
+        width = atoi(argv[1]);
     }
     if (argc > 2) {
-        height = atoi(&argv[2]);
+        height = atoi(argv[2]);
     }
     if (argc > 3) {
-        fov = atof(&argv[3]);
+        fov = atof(argv[3]);
     }
     if (argc > 4) {
-        near = atof(&argv[4]);
-    }
-    if (argc > 5) {
-        far = atof(&argv[5]);
+        rotAngle = atof(argv[4]);
     }
 
     double aspect = double(width) / double(height);
@@ -70,18 +68,20 @@ int main(int argc, char* argv)
     // 变换
     std::vector<Vector4d> vecCube = std::vector<Vector4d>(std::begin(cube), std::end(cube));
     vecCube = ShiftbyDir(vecCube, Vector3d(0., 0., 1.), 50);
-    vecCube = RotatebyAxis(vecCube, Vector3d(0., 0., 1.), 30.);
-    //vecCube = RotatebyAxis(vecCube, Vector3d(0., 1., 0.), -30.);
+    vecCube = RotatebyAxis(vecCube, Vector3d(1., 1., 1.), rotAngle);
     vecCube = ShiftbyDir(vecCube, Vector3d(0., 0., 1.), -100);
 
     // 绘制立方体
     std::vector<std::vector<int>> vecFace;
     std::vector<std::vector<int>> vecTexture;
     for (int i = 0; i < 6; i++) {
-        std::vector<int> faceTmp = std::vector<int>(std::begin(face[i]), std::end(face[i]));
+        //std::vector<int> faceTmp = std::vector<int>(std::begin(face[i]), std::end(face[i]));
         std::vector<int> colorTmp = std::vector<int>(std::begin(color[i]), std::end(color[i]));
-        vecFace.push_back(faceTmp);
-        vecTexture.push_back(colorTmp);
+        for (int j = 0; j < 2; j++) {
+            std::vector<int> faceTmp = { face[i][0], face[i][1 + j], face[i][2 + j] };
+            vecFace.push_back(faceTmp);
+            vecTexture.push_back(colorTmp);
+        }
     }
 
     BmpCreater bmp(width, height);

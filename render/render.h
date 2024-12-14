@@ -84,8 +84,8 @@ std::vector<Vector3d> VertexProj(std::vector<Vector4d> v, Matrix4d& proj, int wi
         if (vTmp.data[3][0] != 0) {
             vTmp = vTmp * (1 / vTmp.data[3][0]);
         }
-        vProj[i] = Vector3d((vTmp.data[0][0] + 0.5) * double(height),
-                            (vTmp.data[1][0] + 0.5) * double(width),
+        vProj[i] = Vector3d((vTmp.data[0][0] + 0.5) * double(width),
+                            (vTmp.data[1][0] + 0.5) * double(height),
                              vTmp.data[2][0]);
     }
     
@@ -151,39 +151,36 @@ void Render(std::vector<Vector4d> vecCube, std::vector<std::vector<int>> face, s
     LOG_INFO("start render\n");
 
     // 面元着色
-    std::vector<std::vector<double>> zBuffer(width, std::vector<double>(height, -INFINITY));
+    std::vector<std::vector<double>> zBuffer(height, std::vector<double>(width, -INFINITY));
     // 像素矩阵每行每列多两个点，方便后处理流程对边界的处理
-    std::vector<std::vector<int>> pixel_r(width + 2, std::vector<int>(height + 2, 0));
-    std::vector<std::vector<int>> pixel_g(width + 2, std::vector<int>(height + 2, 0));
-    std::vector<std::vector<int>> pixel_b(width + 2, std::vector<int>(height + 2, 0));
+    std::vector<std::vector<int>> pixel_r(height + 2, std::vector<int>(width + 2, 0));
+    std::vector<std::vector<int>> pixel_g(height + 2, std::vector<int>(width + 2, 0));
+    std::vector<std::vector<int>> pixel_b(height + 2, std::vector<int>(width + 2, 0));
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             Vector2d v = Vector2d(double(j), double(i));
-            for (unsigned int k = 0; k < 6; k++) {
-                Vector3d t[2][3] = { { vProj[face[k][0]], vProj[face[k][1]], vProj[face[k][2]] },
-                                     { vProj[face[k][0]], vProj[face[k][2]], vProj[face[k][3]] } };
-                // 平面分为的两个三角面法向量一样，计算一次即可
-                Vector3d fNormal = Vector3d::Cross(t[0][1] - t[0][0], t[0][2] - t[0][0]);
-                for (int l = 0; l < 2; l++) {
-                    // 平面与z坐标轴平行，在XoY平面上的投影为一条直线, 不处理
-                    // 平面背对投影平面，即法向量朝向z轴反方向，不处理
-                    if (fNormal.data[2][0] < 0.00001) {
-                        continue;
-                    }
-                    if (IsPointInPlane(v, t[l])) {
-                        // 计算z轴坐标
-                        double vz = Vz(v, t[i], fNormal.Normal());
-                        if (vz > zBuffer[i][j]) {
-                            zBuffer[i][j] = vz;
-                            // 两侧的点为记录像素的边界，因此索引从1开始
-                            pixel_r[i+1][j+1] = texture[k][0];
-                            pixel_g[i+1][j+1] = texture[k][1];
-                            pixel_b[i+1][j+1] = texture[k][2];
-                        }
+            for (unsigned int k = 0; k < face.size(); k++) {
+                Vector3d t[3] = { vProj[face[k][0]], vProj[face[k][1]], vProj[face[k][2]] };
+                Vector3d fNormal = Vector3d::Cross(t[1] - t[0], t[2] - t[0]);
+                // 平面与z坐标轴平行，在XoY平面上的投影为一条直线, 不处理
+                // 平面背对投影平面，即法向量朝向z轴反方向，不处理
+                if (fNormal.data[2][0] < 0.00001) {
+                    continue;
+                }
+                if (IsPointInPlane(v, t)) {
+                    // 计算z轴坐标
+                    double vz = Vz(v, t, fNormal.Normal());
+                    if (vz > zBuffer[i][j]) {
+                        zBuffer[i][j] = vz;
+                        // 两侧的点为记录像素的边界，因此索引从1开始
+                        pixel_r[i + 1][j + 1] = texture[k][0];
+                        pixel_g[i + 1][j + 1] = texture[k][1];
+                        pixel_b[i + 1][j + 1] = texture[k][2];
                     }
                 }
             }
             int progress = (i * width + j) * 100 / (width * height);
+            LOG_INFO("rendering... %d%%\n", progress);
         }
     }
 
@@ -203,6 +200,7 @@ void Render(std::vector<Vector4d> vecCube, std::vector<std::vector<int>> face, s
             }
             bmp.SetPixel(j - 1, i - 1, r / 9, g / 9, b / 9);
             int progress = (i * width + j) * 100 / (width * height);
+            LOG_INFO("post processing... %d%%\n", progress);
         }
     }
 }

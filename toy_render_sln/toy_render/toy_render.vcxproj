@@ -73,6 +73,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>..\..\log_debug;..\..\math_tools;..\..\model_loader;..\..\render;..\..\bmp_creater;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>D:\work\toy_render\toy_render\bmp_creater;D:\work\toy_render\toy_render\log_debug;D:\work\toy_render\toy_render\math_tools;D:\work\toy_render\toy_render\model_loader;D:\work\toy_render\toy_render\render;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
